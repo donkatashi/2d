@@ -1,0 +1,39 @@
+import sqlite3
+
+# Connect to the SQLite database
+conn = sqlite3.connect('clients.db')
+c = conn.cursor()
+
+# Create clients table
+c.execute('''CREATE TABLE IF NOT EXISTS clients
+             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+             email TEXT NOT NULL,
+             login TEXT NOT NULL)''')
+
+# Function to insert a new client into the database
+def add_client(email, login):
+    c.execute("INSERT INTO clients (email, login) VALUES (?, ?)", (email, login))
+    conn.commit()
+
+# Function to retrieve all clients from the database
+def get_all_clients():
+    c.execute("SELECT * FROM clients")
+    clients = c.fetchall()
+    return clients
+
+# Example usage:
+
+# Add clients to the database
+add_client("client1@example.com", "client1")
+add_client("client2@example.com", "client2")
+add_client("client3@example.com", "client3")
+
+# Retrieve all clients from the database
+clients = get_all_clients()
+
+# Print the retrieved clients
+for client in clients:
+    print(f"ID: {client[0]}, Email: {client[1]}, Login: {client[2]}")
+
+# Close the database connection
+conn.close()
